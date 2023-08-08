@@ -124,48 +124,52 @@ console.log(useSymbolDescription()); //Виведе mySymbol
 // Завдання 9: Використання Symbol.iterator
 
 // Об'єкт "myObject" представляє значення   from: 1, to: 7, які можна перебрати
-let range = {
+let rangeObject = {
   from: 1,
-  to: 5,
-  
-  [Symbol.iterator]() {
-  this.current = this.from;
-  return this;
-  },
-  
-  next() {
-  return this.current <= this.to ?
-  { done: false, value: this.current++ } : { done: true };
-  },
+  to: 7,
 
   // Використовуємо Symbol.iterator для створення ітератора всередині об'єкта "myObject"
-  // this.current присвоюємо this.from
-  // Повертаємо this
-  // Створюємо метод "next" який визначає поведінку при кожній ітерації
-  // Використовуйте if
-  // Якщо current менше to, повертаємо об'єкт з властивістю "value",що містить поточне значення ,
-  // та не забуваємо збільшити індекс за допомогою інкремент, і "done" - false, означаючи, що ітерація ще не закінчена
-  // Якщо індекс вийшов за межі масиву ключів, повертаємо об'єкт з властивістю "done" - true, означаючи, що ітерація закінчена
+  [Symbol.iterator]() {
+    // this.current присвоюємо this.from
+    this.current = this.from;
+    return this; // Індекс для ітерації по масиву ключів
+  },
+  //Створюємо метод "next" який визначає поведінку при кожній ітерації
+  next() {
+    if (this.current < this.to) {
+      // Використовуйте if
+      // Якщо current менше to, повертаємо об'єкт з властивістю "value",
+      // що містить поточне значення ,та не забуваємо збільшити індекс за допомогою інкремент, і "done" - false, означаючи, що ітерація ще не закінчена
+      return { value: this.current++, done: false };
+    } else {
+      // Якщо індекс вийшов за межі масиву ключів, повертаємо об'єкт з властивістю "done" - true, означаючи, що ітерація закінчена
+      return { done: true };
+    }
+  },
 };
-
 
 // Функція "useSymbolIterator" використовує ітератор для отримання значень об'єкта
 function useSymbolIterator(obj) {
-  let result = [];  
+  let result = []; // Створюємо масив для зберігання значень
 
-
-  return result;  
   // Проходимо крізь елементи об'єкта obj, використовуючи цикл "for...of"
-  // Додаємо кожне значення до масиву "result"
+  for (let value of obj) {
+    // Додаємо кожне значення до масиву "result"
+    result = [...result, value];
+  }
+
   // Повертаємо масив зі значеннями
+  return result;
 }
 
 console.log("Завдання 9 ====================================");
-console.log(useSymbolIterator(range)); //Виведе [ 1, 2, 3, 4, 5, 6 ]
+
+console.log(useSymbolIterator(rangeObject)); //Виведе [ 1, 2, 3, 4, 5, 6 ]
+
 
 // Завдання 10: Використання Symbol.iterator
 
-// Оголошення об'єкта "myObject" з властивістю "categ qory"
+// Оголошення об'єкта "myObject" з властивістю "category"
 let myObject = {
   //Cтворюємо масив category
   category: [
@@ -175,23 +179,30 @@ let myObject = {
     { id: 4, name: "grape" }, // Об'єкт категорії з ідентифікатором 4 та назвою "grape"
     { id: 5, name: "mango" }, // Об'єкт категорії з ідентифікатором 5 та назвою "mango"
   ],
-  currentIndex: 0,
   //Створюємо властивість currentIndex зі значенням 0, яка буде нашим лічильником в ітерації
+  currentIndex: 0, // Початковий індекс для ітерації
 
+  // Оголошення методу Symbol.iterator для об'єкта "myObject"
   [Symbol.iterator]() {
+    //Повертаємо this
     return this;
   },
-  // Оголошення методу Symbol.iterator для об'єкта "myObject"
-  //Повертаємо this
-  next() {
 
-  }
   // Оголошення методу "next" для ітерації
-  // Створюємо логічний оператор який буде перевіряти чи властивість об'єкту currentIndex менша ніж довжина масиву category
-  //Створюємо змінну value якій присвоємо властивість name елемента масиву category з індексом currentIndex
-  // Збільшимо currentIndex на одиницю
-  // Повертаємо об'єкт з властивістю value значенням якої буде value,та прапорцем done: false
-  //Якщо властивість об'єкту currentIndex більше або дорівнює довжині масиву category повертаємо об'єкт з прапорцем done: true, коли ітерація закінчена
+  next() {
+    // Створюємо логічний оператор який буде перевіряти чи властивість об'єкту currentIndex менша ніж довжина масиву category
+    if (this.currentIndex < this.category.length) {
+      //Створюємо змінну value якій присвоємо властивість name елемента масиву category з індексом currentIndex
+      const value = this.category[this.currentIndex].name;
+      // Збільшимо currentIndex на одиницю
+      this.currentIndex++;
+      // Повертаємо об'єкт з властивістю value значенням якої буде value,та прапорцем done: false
+      return { value, done: false };
+    } else {
+      //Якщо властивість об'єкту currentIndex більше або дорівнює довжині масиву category повертаємо об'єкт з прапорцем done: true, коли ітерація закінчена
+      return { done: true };
+    }
+  },
 };
 
 console.log("Завдання 10 ====================================");
